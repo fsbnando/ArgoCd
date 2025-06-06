@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: grafana-dashboard-example
-  namespace: grafana
-  labels:
-    grafana_dashboard: enabled
-data:
-  nome-dashboard.json: ""
