@@ -1,0 +1,33 @@
+# Patterns to ignore when building packages.
+# This supports shell glob matching, relative path matching, and
+# negation (prefixed with !). Only one pattern per line.
+.DS_Store
+# Common VCS dirs
+.git/
+.gitignore
+.bzr/
+.bzrignore
+.hg/
+.hgignore
+.svn/
+# Common backup files
+*.swp
+*.bak
+*.tmp
+*~
+# Various IDEs
+.vscode
+.project
+.idea/
+*.tmproj
+OWNERS
+
+# Ignora o terraform no repositorio
+# Obs: do contrário, irá tentar renderizar o terraform como parte do chart
+terraform/*
+
+# Ignora conteudo adicional da plataforma.
+# Obs: 
+#  Conteudo manual, como o nome diz, são conteudos aplicados manualmente (sem necessidade de um helm upgrade).
+#  Apesar de ignorados no render do helm, são commitados no git para controle de versão obviamente.
+manual-content/*

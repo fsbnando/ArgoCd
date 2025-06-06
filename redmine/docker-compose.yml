@@ -1,0 +1,28 @@
+version: '3'
+services:
+  redmine:
+    image: redmine:latest
+    container_name: redmine
+    restart: always
+    environment:
+      REDMINE_DB_MYSQL: redmine_db
+      REDMINE_DB_PASSWORD: beltrame
+      REDMINE_DB_DATABASE: redmine
+      REDMINE_DB_USERNAME: redmine
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./redmine_data:/usr/src/redmine/files
+  db:
+    image: mysql:5.7
+    container_name: redmine_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: beltrame
+      MYSQL_DATABASE: redmine
+      MYSQL_USER: redmine
+      MYSQL_PASSWORD: beltrame
+    volumes:
+      - ./mysql_data:/var/lib/mysql

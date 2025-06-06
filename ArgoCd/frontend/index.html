@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fortune Cookie</title>
+    <!-- Include Tailwind CSS from the CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold mb-8">Fortune Cookie</h1>
+        <button onclick="getFortune()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Get Your Fortune
+        </button>
+        <!-- Fortune message box -->
+        <div id="fortune" class="text-xl mt-6 text-gray-700 border border-gray-300 rounded p-4 h-24 flex items-center justify-center">
+            <!-- The fortune message will appear here -->
+        </div>
+    </div>
+
+    <script>
+        async function getFortune() {
+            const response = await fetch('/fortune');
+            const data = await response.json();
+            document.getElementById('fortune').innerText = data.message;
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,324 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: grafana
+  labels:
+    grafana_datasource: enabled
+data:
+  datasources.yaml: |-
+    apiVersion: 1
+    ##
+    ## Datasources a serem removidos/deletados
+    ##
+    # deleteDatasources:
+    #   - name: <nome-database>
+    #     uid: <uid-database>
+    #     orgId: 1 # padrao
+
+    ##
+    ## Datasources a serem adicionados/atualizados
+    ##
+    datasources:
+    ## Prometheus datasources
+    - name: Prometheus (Skylab)
+      uid: prometheus-skylab
+      type: prometheus
+      url: https://prometheus-skylab.vrbeneficios.io
+      access: proxy
+      isDefault: false
+      editable: true
+
+    - name: Prometheus (Infra)
+      uid: prometheus-infra
+      type: prometheus
+      url: https://prometheus-infra.vrbeneficios.io
+      access: proxy
+      isDefault: false
+      editable: true
+
+    - name: Prometheus (Pioneer)
+      uid: prometheus-pioneer
+      type: prometheus
+      url: https://prometheus-pioneer.vrbeneficios.io
+      access: proxy
+      isDefault: false
+      editable: true
+
+    - name: Prometheus (Hubble)
+      uid: prometheus-hubble
+      type: prometheus
+      url: https://prometheus-hubble.vrbeneficios.io
+      access: proxy
+      isDefault: false
+      editable: true
+
+    - name: Prometheus (Voyager2)
+      uid: prometheus-voyager2
+      type: prometheus
+      url: https://prometheus-voyager2.vrbeneficios.io
+      access: proxy
+      isDefault: false
+      editable: true
+
+    # CloudWatch datasources
+    - name: CloudWatch (vrprd)
+      uid: cloudwatch-vrprd
+      type: cloudwatch
+      access: proxy
+      editable: false
+      isDefault: false
+      jsonData:
+        authType: keys
+        defaultREgion: sa-east-1
+      secureJsonData:
+        accessKey: "${CLOUDWATCH-VRPRD-ACCESSKEY}"
+        secretKey: "${CLOUDWATCH-VRPRD-SECRETKEY}"
+
+    - name: CloudWatch (vrdev)
+      uid: cloudwatch-vrdev
+      type: cloudwatch
+      access: proxy
+      editable: false
+      isDefault: false
+      jsonData:
+        authType: keys
+        defaultREgion: us-east-2
+      secureJsonData:
+        accessKey: "${CLOUDWATCH-VRDEV-ACCESSKEY}"
+        secretKey: "${CLOUDWATCH-VRDEV-SECRETKEY}"
+
+    - name: CloudWatch (vrbanco)
+      uid: cloudwatch-vrbanco
+      type: cloudwatch
+      access: proxy
+      editable: false
+      isDefault: false
+      jsonData:
+        authType: keys
+        defaultREgion: sa-east-1
+      secureJsonData:
+        accessKey: "${CLOUDWATCH-VRBANCO-ACCESSKEY}"
+        secretKey: "${CLOUDWATCH-VRBANCO-SECRETKEY}"
+
+    - name: CloudWatch (vrmanager)
+      uid: cloudwatch-vrmanager
+      type: cloudwatch
+      access: proxy
+      editable: false
+      isDefault: false
+      jsonData:
+        authType: keys
+        defaultREgion: us-east-1
+      secureJsonData:
+        accessKey: "${CLOUDWATCH-VRMANAGER-ACCESSKEY}"
+        secretKey: "${CLOUDWATCH-VRMANAGER-SECRETKEY}"
+
+    ## Zabbix datasources
+    ## Doc ref: https://alexanderzobnin.github.io/grafana-zabbix/configuration/provisioning/
+    - name: Zabbix
+      uid: zabbix-server
+      type: alexanderzobnin-zabbix-datasource
+      url: https://zabbix.vr.com.br/api_jsonrpc.php
+      access: proxy
+      isDefault: false
+      disableDeletion: true
+      editable: true
+      withCredentials: true
+      jsonData:
+        # Zabbix API credentials
+        username: "${ZABBIX-SERVER-USER}"
+        password: "${ZABBIX-SERVER-PASSWORD}"
+        # Alerting options
+        alerting: true
+        # Trends options
+        trends: true
+        # Cache update interval
+        cacheTTL: "1h"
+        # Use value mapping from Zabbix
+        useZabbixValueMapping: true
+        # Other configs
+        tlsSkipVerify: true
+
+    ## ElasticSearch datasources
+    - name: Elasticsearch DEV (log-central)
+      type: elasticsearch
+      access: proxy
+      uid: es-logcentral-dev
+      url: https://vpc-log-central-develope-b6vtktdjjqpfcnq6knrqprgnzy.us-east-1.es.amazonaws.com
+      database: '*'
+      basicAuth: false
+      isDefault: false
+      editable: false
+      jsonData:
+        esVersion: 70
+        logMessageField: message
+        maxConcurrentShardRequests: 5
+        timeField: "@timestamp"
+        timeInterval: 10
+        logLevelField: "level"
+
+    - name: Elasticsearch PRD (log-central)
+      uid: es-logcentral-prd
+      type: elasticsearch
+      access: proxy
+      url: https://vpc-log-central-prod-juthxlkbxrz4tsmxncukuohhtq.us-east-1.es.amazonaws.com
+      database: '*'
+      basicAuth: false
+      isDefault: false
+      editable: false
+      jsonData:
+        esVersion: 70
+        logMessageField: message
+        maxConcurrentShardRequests: 5
+        timeField: "@timestamp"
+        timeInterval: 10
+        logLevelField: "level"
+
+    - name: ElasticSearch (notification-center)
+      type: elasticsearch
+      access: proxy
+      uid: es-notification-center
+      url: https://vpc-notification-center-kni4kkk57ttvulczmd3zbx7jpa.sa-east-1.es.amazonaws.com
+      database: 'notification_center-*'
+      basicAuth: false
+      isDefault: false
+      editable: false
+      jsonData:
+        esVersion: 70
+        logMessageField: message
+        maxConcurrentShardRequests: 5
+        timeField: "created_at"
+        timeInterval: 10
+        logLevelField: "level"
+
+    ## InfluxDB datasources
+
+    # Influxdb configurado no EKS saruman, que será descontinuado
+    - name: InfluxDB (aws sncore)
+      uid: influxdb-aws-sncore
+      type: influxdb
+      access: proxy
+      url: http://influxdb.vrbeneficios.io:80
+      isDefault: false
+      editable: false
+      database: sncore
+      user: "${INFLUXDB-AWS-SNCORE-USER}"
+      jsonData:
+        httpMode: 'GET'
+        timeInterval: '30s'
+      secureJsonData:
+        # <string> database password, if used
+        password: "${INFLUXDB-AWS-SNCORE-PASSWORD}"
+
+    # Influxdb2 configurado no EKS apache que substituira o influxdb sncore do cluster Saruman
+    - name: sncore
+      uid: influxdb-sncore
+      type: influxdb
+      access: proxy
+      url: http://influxdb-apache.vrbeneficios.io:80
+      isDefault: false
+      editable: false
+      database: sncore-db
+      user: "${INFLUXDB-SNCORE-USER}"
+      jsonData:
+        httpMode: 'GET'
+        timeInterval: '30s'
+      secureJsonData:
+        # <string> database password, if used
+        password: "${INFLUXDB-SNCORE-PASSWORD}"
+
+    - name: cicd-jira
+      type: influxdb
+      access: proxy
+      uid: infludb-cicd-jira
+      url: http://influxdb-cicd.vrbeneficios.io:80
+      isDefault: false
+      editable: false
+      database: jira-db
+      user: "${INFLUXDB-CICD-JIRA-USER}"
+      jsonData:
+        httpMode: 'GET'
+        httpHeaderName1: 'Authorization'
+      secureJsonData:
+        httpHeaderValue1: 'Token ${INFLUXDB-CICD-JIRA-TOKEN}' # API Token "jira-token"
+        password: "${INFLUXDB-CICD-JIRA-PASSWORD}"
+
+    - name: cicd-jenkins
+      type: influxdb
+      access: proxy
+      uid: infludb-cicd-jenkins
+      url: http://influxdb-cicd.vrbeneficios.io:80
+      isDefault: false
+      editable: false
+      database: jenkins-db
+      user: "${INFLUXDB-CICD-JENKINS-USER}"
+      jsonData:
+        httpMode: 'GET'
+        httpHeaderName1: 'Authorization'
+      secureJsonData:
+        httpHeaderValue1: 'Token ${INFLUXDB-CICD-JENKINS-TOKEN}' # API Token "jenkins-token"
+        password: "${INFLUXDB-CICD-JENKINS-PASSWORD}"
+
+
+    ## MySQL datasources
+    - name: MySQL PRD (paguevr)
+      uid: mysql-paguevr-prd
+      type: mysql
+      access: proxy
+      url: paguevrprd.ciqykmupp2tq.sa-east-1.rds.amazonaws.com
+      isDefault: false
+      editable: false
+      database: PAGUEVR
+      user: "${MYSQL-PAGUEVR-PRD-USER}"
+      secureJsonData:
+        # <string> database password, if used
+        password: "${MYSQL-PAGUEVR-PRD-PASSWORD}"
+
+    - name: Fidelidade PRD
+      uid: mysql-fidelidade-prd
+      type: mysql
+      access: proxy
+      url: fidelity.ciqykmupp2tq.sa-east-1.rds.amazonaws.com
+      isDefault: false
+      editable: false
+      database: fidelity
+      user: "${MYSQL-FIDELIDADE-PRD-USER}"
+      secureJsonData:
+        password: "${MYSQL-FIDELIDADE-PRD-PASSWORD}"
+      jsonData:
+        maxOpenConns: 0
+        maxIdleConns: 2
+        connMaxLifetime: 14400
+
+    - name: Inventario
+      uid: mysql-rundeck-inventario
+      type: mysql
+      access: proxy
+      url: rundeck.cvx1bjdqm5qv.us-east-2.rds.amazonaws.com:3306
+      isDefault: false
+      editable: false
+      database: inventario
+      user: "${MYSQL-RUNDECK-INVENTARIO-USER}"
+      secureJsonData:
+        password: "${MYSQL-RUNDECK-INVENTARIO-PASSWORD}"
+      jsonData:
+        maxOpenConns: 0
+        maxIdleConns: 2
+        connMaxLifetime: 14400
+
+    ## AWS Timestream-Datasource
+    - name: timestream
+      uid: timestream-vrdev
+      type: grafana-timestream-datasource
+      url: https://us-east-2.console.aws.amazon.com/timestream/home?region=us-east-2#databases
+      editable: true
+      jsonData:
+        defaultRegion: us-east-2
+      Database: grafana
+      ## AWS timestream-Table
+      DatabaseName: timestream-database
+      RetentionProperties:
+      MemoryStoreRetentionPeriodInHours: "24"
+      MagneticStoreRetentionPeriodInDays: "7"
+      TableName: timestream-table

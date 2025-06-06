@@ -1,0 +1,9 @@
+# Arquivos a ignorar
+# Nao realizar commit dos arquivos de credenciais.
+# PS: Se precisar deles, procure no keepass (ou no chaveiro atual)
+manual-content/credentials/*
+manual-content/configmaps/*-deprecated*
+
+# Ignora arquivos de modulos externos e do plan gerado pelo terraform
+terraform/.terraform/**
+terraform/*plan*
